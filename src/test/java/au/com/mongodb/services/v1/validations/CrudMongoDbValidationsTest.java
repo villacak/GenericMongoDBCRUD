@@ -2,7 +2,7 @@ package au.com.mongodb.services.v1.validations;
 
 import au.com.mongodb.HelperTest;
 import au.com.mongodb.enums.EventSearchField;
-import au.com.mongodb.mapper.EventMapper;
+import au.com.mongodb.mapper.SchemaMapper;
 import au.com.mongodb.model.EventModel;
 import au.com.mongodb.persistence.entities.Event;
 import au.com.mongodb.services.v1.health.HealthHelper;
@@ -27,7 +27,7 @@ public class CrudMongoDbValidationsTest {
         if (isRunning) {
             final HelperTest helperTest = new HelperTest();
             event = helperTest.getEventEntityForTest();
-            model = EventMapper.MAPPER.mapEventEntityToEventModel(event);
+            model = SchemaMapper.MAPPER.mapSchemaEntityToSchemaModel(event);
             validations = new CrudMongoDbValidations();
         } else {
             throw new Exception("Local MongoDB not Running");

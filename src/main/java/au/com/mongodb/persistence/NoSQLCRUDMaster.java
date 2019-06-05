@@ -1,7 +1,9 @@
 package au.com.mongodb.persistence;
 
-import au.com.mongodb.enums.EventSearchField;
-import au.com.mongodb.persistence.entities.Event;
+import au.com.mongodb.constants.Constant;
+import au.com.mongodb.model.JSONSchemaModel;
+import au.com.mongodb.persistence.entities.DataEntity;
+import au.com.mongodb.persistence.entities.SchemaEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,51 +28,93 @@ public class NoSQLCRUDMaster {
     }
 
 
+
     /**
-     * Search
+     * searchById
      *
-     * @param eventSearchField
-     * {@link EventSearchField}
-     *
-     * @param valueForSearch
+     * @param searchField
+     * @param searchValue
+     * @param namedQuery
      * @return
      */
-    public List<Event> search(final EventSearchField eventSearchField, final String valueForSearch) {
-        final String namedQuery;
-        final String keyValue;
-        if (eventSearchField.equals(EventSearchField.ID) && valueForSearch != null) {
-            namedQuery = "event.findById";
-            keyValue = EventSearchField.ID.getField();
-        } else if (eventSearchField.equals(EventSearchField.ACCOUNT_ID) && valueForSearch != null) {
-            namedQuery = "event.findByAccountId";
-            keyValue = EventSearchField.ACCOUNT_ID.getField();
-        } else if (eventSearchField.equals(EventSearchField.REFERENCE_NUMBER) && valueForSearch != null) {
-            namedQuery = "event.findByReferenceNumber";
-            keyValue = EventSearchField.REFERENCE_NUMBER.getField();
-        } else if (eventSearchField.equals(EventSearchField.ACCOUNT_NUMBER) && valueForSearch != null) {
-            namedQuery = "event.findByAccountNumber";
-            keyValue = EventSearchField.ACCOUNT_NUMBER.getField();
-        } else if (eventSearchField.equals(EventSearchField.SCHEME_MEMBERSHIP_NUMBER) && valueForSearch != null) {
-            namedQuery = "event.findBySchemeMembershipNumber";
-            keyValue = EventSearchField.SCHEME_MEMBERSHIP_NUMBER.getField();
-        } else {
-            namedQuery = null;
-            keyValue = null;
-        }
-
-        final List<Event> toReturn;
+    public <T> List<T> searchById(final String searchField, final String searchValue, final String namedQuery) {
+        final List<T> toReturn;
         if (namedQuery == null) {
             toReturn = null;
         } else {
             final Query query = em.createNamedQuery(namedQuery);
-            if (keyValue != null && valueForSearch != null) {
-                query.setParameter(keyValue, valueForSearch);
+            if (searchField != null && searchValue != null) {
+                query.setParameter(searchField, searchValue);
             }
             toReturn = query.getResultList();
         }
         return toReturn;
     }
 
+
+    /**
+     * searchByNameAndVersion
+     *
+     * @param schemaName
+     * @param majorVersion
+     * @param minorVersion
+     * @param namedQuery
+     * @param <T>
+     * @return
+     */
+    public <T> List<T> searchByNameAndVersion(final String schemaName, final int majorVersion, final int minorVersion, final String namedQuery) {
+        final List<T> toReturn;
+        if (namedQuery == null) {
+            toReturn = null;
+        } else {
+            final Query query = em.createNamedQuery(namedQuery);
+            if (schemaName != null) {
+                query.setParameter(Constant.SCHEMA_NAME, schemaName);
+                query.setParameter(Constant.MAJOR_VERSION, majorVersion);
+                query.setParameter(Constant.MINOR_VERSION, minorVersion);
+            }
+            toReturn = query.getResultList();
+        }
+        return toReturn;
+    }
+
+
+
+    public List<DataEntity> searchDataByUserIdSchemaAndMajorVersionRange(final String userId, final String schemaName,
+                                                                    final int majorVersionFrom, final int majorVersionTo,
+                                                                    final String namedQuery) {
+        final List<DataEntity> toReturn;
+        if (namedQuery == null) {
+            toReturn = null;
+        } else {
+            final Query query = em.createNamedQuery(namedQuery);
+            if (schemaName != null) {
+                query.setParameter(Constant.SCHEMA_NAME, userId);
+                query.setParameter(Constant.SCHEMA_NAME, schemaName);
+                query.setParameter(Constant.MAJOR_VERSION_FROM, majorVersionFrom);
+                query.setParameter(Constant.MAJOR_VERSION_TO, majorVersionTo);
+            }
+            toReturn = query.getResultList();
+        }
+        return toReturn;
+    }
+
+
+    public List<DataEntity> searchDataByUserIdSchema(final String userId, final String schemaName,
+                                                     final String namedQuery) {
+        final List<DataEntity> toReturn;
+        if (namedQuery == null) {
+            toReturn = null;
+        } else {
+            final Query query = em.createNamedQuery(namedQuery);
+            if (schemaName != null) {
+                query.setParameter(Constant.SCHEMA_NAME, userId);
+                query.setParameter(Constant.SCHEMA_NAME, schemaName);
+            }
+            toReturn = query.getResultList();
+        }
+        return toReturn;
+    }
 
 
     /**

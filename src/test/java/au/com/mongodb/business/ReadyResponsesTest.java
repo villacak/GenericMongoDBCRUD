@@ -2,7 +2,7 @@ package au.com.mongodb.business;
 
 import au.com.mongodb.HelperTest;
 import au.com.mongodb.enums.EventSearchField;
-import au.com.mongodb.mapper.EventMapper;
+import au.com.mongodb.mapper.SchemaMapper;
 import au.com.mongodb.model.EventModel;
 import au.com.mongodb.persistence.entities.Event;
 import au.com.mongodb.services.v1.health.HealthHelper;
@@ -19,11 +19,11 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class EventBusinessTest {
+public class ReadyResponsesTest {
 
     private Event event;
     private EventModel model;
-    private EventBusiness business;
+    private ReadyResponses business;
     private ObjectMapper mapper;
     EventModel saved = null;
     EventModel updated = null;
@@ -37,8 +37,8 @@ public class EventBusinessTest {
         if (isRunning) {
             final HelperTest helperTest = new HelperTest();
             event = helperTest.getEventEntityForTest();
-            model = EventMapper.MAPPER.mapEventEntityToEventModel(event);
-            business = new EventBusiness();
+            model = SchemaMapper.MAPPER.mapSchemaEntityToSchemaModel(event);
+            business = new ReadyResponses();
             mapper = new ObjectMapper();
         } else {
             throw new Exception("Local MongoDB not Running");
@@ -149,7 +149,7 @@ public class EventBusinessTest {
 
     @Test
     public void badRequest() {
-        Response resp = EventBusiness.badRequest();
+        Response resp = ReadyResponses.badRequest();
         assertNotNull(resp);
         assertEquals(resp.getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
     }
@@ -157,7 +157,7 @@ public class EventBusinessTest {
 
     @Test
     public void bserverError() {
-        Response resp = EventBusiness.serverError();
+        Response resp = ReadyResponses.serverError();
         assertNotNull(resp);
         assertEquals(resp.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
     }
@@ -166,7 +166,7 @@ public class EventBusinessTest {
     @Test
     public void successWithMessage() {
         final String TEST = "TEST";
-        Response resp = EventBusiness.successWithMessage(TEST);
+        Response resp = ReadyResponses.successWithMessage(TEST);
         assertNotNull(resp);
         assertEquals(resp.getStatus(), Response.Status.OK.getStatusCode());
         assertTrue(((String)resp.getEntity()).contains(TEST));

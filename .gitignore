@@ -6,7 +6,7 @@
 # User-specific stuff
 .idea
 
-jpamongodb.iml
+*.iml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

@@ -19,8 +19,8 @@ Resources:
             Method: any
 
 Outputs:
-  jpaMOngoDBCrudAPIs:
+  JpaMOngoDBCrudAPIs:
     Description: URL for application
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/healthCheck/v1/check'
+    Value: !Sub 'https://${JpaMOngoDBCrudAPIs}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
     Export:
-      Name: jpaMOngoDBCrudAPIs
+      Name: JPAMongoDBAPIs
