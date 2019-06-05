@@ -79,7 +79,16 @@ public class NoSQLCRUDMaster {
     }
 
 
-
+    /**
+     * searchDataByUserIdSchemaAndMajorVersionRange
+     *
+     * @param userId
+     * @param schemaName
+     * @param majorVersionFrom
+     * @param majorVersionTo
+     * @param namedQuery
+     * @return
+     */
     public List<DataEntity> searchDataByUserIdSchemaAndMajorVersionRange(final String userId, final String schemaName,
                                                                     final int majorVersionFrom, final int majorVersionTo,
                                                                     final String namedQuery) {
@@ -89,7 +98,7 @@ public class NoSQLCRUDMaster {
         } else {
             final Query query = em.createNamedQuery(namedQuery);
             if (schemaName != null) {
-                query.setParameter(Constant.SCHEMA_NAME, userId);
+                query.setParameter(Constant.USER_ID, userId);
                 query.setParameter(Constant.SCHEMA_NAME, schemaName);
                 query.setParameter(Constant.MAJOR_VERSION_FROM, majorVersionFrom);
                 query.setParameter(Constant.MAJOR_VERSION_TO, majorVersionTo);
@@ -100,6 +109,14 @@ public class NoSQLCRUDMaster {
     }
 
 
+    /**
+     * searchDataByUserIdSchema
+     *
+     * @param userId
+     * @param schemaName
+     * @param namedQuery
+     * @return
+     */
     public List<DataEntity> searchDataByUserIdSchema(final String userId, final String schemaName,
                                                      final String namedQuery) {
         final List<DataEntity> toReturn;
@@ -108,7 +125,7 @@ public class NoSQLCRUDMaster {
         } else {
             final Query query = em.createNamedQuery(namedQuery);
             if (schemaName != null) {
-                query.setParameter(Constant.SCHEMA_NAME, userId);
+                query.setParameter(Constant.USER_ID, userId);
                 query.setParameter(Constant.SCHEMA_NAME, schemaName);
             }
             toReturn = query.getResultList();

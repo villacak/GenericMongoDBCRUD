@@ -5,6 +5,11 @@ import javax.ws.rs.core.Response;
 
 public class ReadyResponses {
 
+    /**
+     * badRequest - 400
+     *
+     * @return
+     */
     public static Response badRequest() {
         final ResponseMessage responseMessage = new ResponseMessage(Response.Status.BAD_REQUEST.getStatusCode(),
                 "Basic Validation Failed. Please check your payload.");
@@ -13,7 +18,10 @@ public class ReadyResponses {
     }
 
 
-
+    /**
+     * serverError - 500
+     * @return
+     */
     public static Response serverError() {
         final ResponseMessage responseMessage = new ResponseMessage(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(),
                 Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
@@ -22,7 +30,11 @@ public class ReadyResponses {
     }
 
 
-
+    /**
+     * successWithMessage - 200
+     * @param message
+     * @return
+     */
     public static Response successWithMessage(final String message) {
         final ResponseMessage responseMessage = new ResponseMessage(Response.Status.OK.getStatusCode(), message);
         final Response response = Response.ok().entity(responseMessage.toJSON()).build();

@@ -18,6 +18,12 @@ import java.util.List;
 public class DataBusiness {
 
 
+    /**
+     * convertRequestToModel
+     *
+     * @param jsonData
+     * @return
+     */
     public JSONDataModel convertRequestToModel(final String jsonData) {
         final CrudMongoDbValidations validations = new CrudMongoDbValidations();
         final ObjectMapper mapper = new ObjectMapper();
@@ -38,6 +44,7 @@ public class DataBusiness {
 
         return dataModel;
     }
+
 
     /**
      * persistSingleJSONData

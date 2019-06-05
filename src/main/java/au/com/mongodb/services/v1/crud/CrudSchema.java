@@ -6,8 +6,6 @@ import au.com.mongodb.model.JSONSchemaModel;
 import au.com.mongodb.services.v1.validations.CrudMongoDbValidations;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 

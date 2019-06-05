@@ -2,28 +2,25 @@ package au.com.mongodb.services.v1.validations;
 
 import au.com.mongodb.business.ReadyResponses;
 import au.com.mongodb.business.SchemaBusiness;
-import au.com.mongodb.constants.Constant;
-import au.com.mongodb.enums.EventSearchField;
-import au.com.mongodb.mapper.SchemaMapper;
 import au.com.mongodb.model.JSONDataModel;
 import au.com.mongodb.model.JSONSchemaModel;
-import au.com.mongodb.model.ResponseMessage;
-import au.com.mongodb.persistence.entities.SchemaEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import com.github.fge.jsonschema.main.JsonValidator;
-
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 public class CrudMongoDbValidations {
 
     private final String EMPTY = "";
 
+    /**
+     * validateSchema
+     *
+     * @param json
+     * @return
+     */
     public Response validateSchema(final String json) {
         Response resp;
         try {
@@ -49,6 +46,13 @@ public class CrudMongoDbValidations {
     }
 
 
+    /**
+     * validateData
+     *
+     * @param validateSchema
+     * @param json
+     * @return
+     */
     public Response validateData(final boolean validateSchema, final String json) {
         Response resp = null;
         try {
@@ -84,6 +88,12 @@ public class CrudMongoDbValidations {
     }
 
 
+    /**
+     * validateMandatoryString
+     *
+     * @param value
+     * @return
+     */
     public boolean validateMandatoryString(final String value) {
         final boolean isValid;
         if (value != null && !value.equals(EMPTY)) {
@@ -92,19 +102,6 @@ public class CrudMongoDbValidations {
             isValid = false;
         }
         return isValid;
-    }
-
-
-    public EventSearchField getSearchFieldEnum(final String field) {
-        EventSearchField toReturn = null;
-        final EventSearchField[] fields = EventSearchField.values();
-        for (EventSearchField tempField : fields) {
-            if (tempField.getField().equalsIgnoreCase(field)) {
-                toReturn = tempField;
-                break;
-            }
-        }
-        return toReturn;
     }
 
 }
