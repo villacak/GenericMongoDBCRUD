@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class EventMapperTest {
+public class SchemaMapperTest {
 
 
     private Event event;
@@ -43,7 +43,7 @@ public class EventMapperTest {
         assertNotNull(event);
         assertNull(model);
 
-        model = EventMapper.MAPPER.mapEventEntityToEventModel(event);
+        model = SchemaMapper.MAPPER.mapSchemaEntityToSchemaModel(event);
         assertEquals(model.getPrimaryKey(), event.get_id());
         assertEquals(model.getAccNumber(), event.getAccountNumber());
         assertEquals(model.getAccountID(), event.getAccountId());
@@ -56,7 +56,7 @@ public class EventMapperTest {
         assertNotNull(model);
         assertNull(event);
 
-        event = EventMapper.MAPPER.mapEventModelToEventEntity(model);
+        event = SchemaMapper.MAPPER.mapSchemaModelToSchemaEntity(model);
         assertEquals(event.get_id(), model.getPrimaryKey());
         assertEquals(event.getAccountNumber(), model.getAccNumber());
         assertEquals(event.getAccountId(), model.getAccountID());
