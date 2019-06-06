@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class JSONSchemaModel {
 
-    private int schemaId;
+    private int id;
     private String schemaName;
     private int majorVersion;
     private int minorVersion;
@@ -20,12 +20,12 @@ public class JSONSchemaModel {
 
 
 
-    public int getSchemaId() {
-        return schemaId;
+    public int getId() {
+        return id;
     }
 
-    public void setSchemaId(int schemaId) {
-        this.schemaId = schemaId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getSchemaName() {

@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/v1/health")
 @Consumes(MediaType.WILDCARD)
-@Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON})
+@Produces({MediaType.APPLICATION_JSON})
 public class HealthService {
 
 

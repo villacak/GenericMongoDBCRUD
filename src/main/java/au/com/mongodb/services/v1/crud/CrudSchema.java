@@ -51,7 +51,7 @@ public class CrudSchema {
         if (validations.validateMandatoryString(schemaName)) {
             final SchemaBusiness business = new SchemaBusiness();
             final JSONSchemaModel model = business.searchSchemaByNameAndVersion(schemaName, majorVersion, minorVersion);
-            response = business.deleteSingleSchema(String.valueOf(model.getSchemaId()));
+            response = business.deleteSingleSchema(String.valueOf(model.getId()));
         } else {
             response = ReadyResponses.badRequest();
         }

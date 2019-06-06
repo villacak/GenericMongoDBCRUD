@@ -2,8 +2,8 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
     <persistence-unit name="NoSQLPersistenceUnit" transaction-type="RESOURCE_LOCAL">
-        <class>au.com.mongodb.persistence.entities.Event</class>
-        <class>au.com.mongodb.persistence.entities.SystemMetadata</class>
+        <class>au.com.mongodb.persistence.entities.SchemaEntity</class>
+        <class>au.com.mongodb.persistence.entities.DataEntity</class>
 
         <!-- For MongoDB -->
         <properties>

@@ -1,26 +1,26 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: AWS Serverless Jersey API - au.com.mongodb::jpaMongoDB
-Resources:
-  JerseySampleFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: au.com.mongodb.StreamLambdaHandler::handleRequest
-      Runtime: java8
-      CodeUri: target/jpa-mongodb-1.0-lambda-package.zip
-      MemorySize: 512
-      Policies: AWSLambdaBasicExecutionRole
-      Timeout: 5
-      Events:
-        GetResource:
-          Type: Api
-          Properties:
-            Path: /{proxy+}
-            Method: any
-
-Outputs:
-  JpaMOngoDBCrudAPIs:
-    Description: URL for application
-    Value: !Sub 'https://${JpaMOngoDBCrudAPIs}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
-    Export:
-      Name: JPAMongoDBAPIs
+#AWSTemplateFormatVersion: '2010-09-09'
+#Transform: AWS::Serverless-2016-10-31
+#Description: AWS Serverless Jersey API - au.com.mongodb::jpaMongoDB
+#Resources:
+#  JerseySampleFunction:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      Handler: au.com.mongodb.StreamLambdaHandler::handleRequest
+#      Runtime: java8
+#      CodeUri: target/jpa-mongodb-1.0-lambda-package.zip
+#      MemorySize: 512
+#      Policies: AWSLambdaBasicExecutionRole
+#      Timeout: 5
+#      Events:
+#        GetResource:
+#          Type: Api
+#          Properties:
+#            Path: /{proxy+}
+#            Method: any
+#
+#Outputs:
+#  JpaMOngoDBCrudAPIs:
+#    Description: URL for application
+#    Value: !Sub 'https://${JpaMOngoDBCrudAPIs}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+#    Export:
+#      Name: JPAMongoDBAPIs
