@@ -99,13 +99,13 @@ public class JSONDataModel {
         if (this == o) return true;
         if (!(o instanceof JSONDataModel)) return false;
         JSONDataModel dataModel = (JSONDataModel) o;
-        return dataId == dataModel.dataId &&
-                majorVersion == dataModel.majorVersion &&
+        return majorVersion == dataModel.majorVersion &&
                 minorVersion == dataModel.minorVersion &&
+                Objects.equals(dataId, dataModel.dataId) &&
                 Objects.equals(schemaName, dataModel.schemaName) &&
                 Objects.equals(createdTS, dataModel.createdTS) &&
                 Objects.equals(createdBy, dataModel.createdBy) &&
-                Objects.equals(json, dataModel.json);
+                json.equals(dataModel.json);
     }
 
     @Override

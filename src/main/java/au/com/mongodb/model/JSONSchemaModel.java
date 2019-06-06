@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 
 public class JSONSchemaModel {
 
@@ -117,5 +118,27 @@ public class JSONSchemaModel {
             json = null;
         }
         return json;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof JSONSchemaModel)) return false;
+        JSONSchemaModel that = (JSONSchemaModel) o;
+        return majorVersion == that.majorVersion &&
+                minorVersion == that.minorVersion &&
+                isValid == that.isValid &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(schemaName, that.schemaName) &&
+                Objects.equals(createdBy, that.createdBy) &&
+                Objects.equals(createdTS, that.createdTS) &&
+                Objects.equals(startedTS, that.startedTS) &&
+                Objects.equals(endTS, that.endTS) &&
+                json.equals(that.json);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, schemaName, majorVersion, minorVersion, createdBy, createdTS, startedTS, endTS, isValid, json);
     }
 }

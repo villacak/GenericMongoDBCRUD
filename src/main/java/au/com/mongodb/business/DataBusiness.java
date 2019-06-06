@@ -9,7 +9,6 @@ import au.com.mongodb.persistence.entities.DataEntity;
 import au.com.mongodb.services.v1.validations.CrudMongoDbValidations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -112,7 +111,7 @@ public class DataBusiness {
         Response response = null;
         try {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<DataEntity> dataEntities = crud.searchById(field, id, "data.findById");
+            final List<DataEntity> dataEntities = crud.searchById(id, field, "data.findById");
             if (dataEntities == null || dataEntities.size() == 0) {
                 response = ReadyResponses.successWithMessage("Nothing found.");
             } else {
