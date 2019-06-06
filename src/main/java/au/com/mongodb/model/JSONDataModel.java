@@ -3,23 +3,25 @@ package au.com.mongodb.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Objects;
 
 public class JSONDataModel {
 
-    private int dataId;
+    private String dataId;
     private String schemaName;
     private int majorVersion;
     private int minorVersion;
-    private LocalDateTime createdTS;
+    private Date createdTS;
     private String createdBy;
     private String json;
+    private int version;
 
-    public int getDataId() {
+    public String getDataId() {
         return dataId;
     }
 
-    public void setDataId(int dataId) {
+    public void setDataId(String dataId) {
         this.dataId = dataId;
     }
 
@@ -47,11 +49,11 @@ public class JSONDataModel {
         this.minorVersion = minorVersion;
     }
 
-    public LocalDateTime getCreatedTS() {
+    public Date getCreatedTS() {
         return createdTS;
     }
 
-    public void setCreatedTS(LocalDateTime createdTS) {
+    public void setCreatedTS(Date createdTS) {
         this.createdTS = createdTS;
     }
 
@@ -71,6 +73,15 @@ public class JSONDataModel {
         this.json = json;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+
     public String toJSON() {
         final ObjectMapper mapper = new ObjectMapper();
         String json = null;
@@ -80,5 +91,25 @@ public class JSONDataModel {
             json = null;
         }
         return json;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof JSONDataModel)) return false;
+        JSONDataModel dataModel = (JSONDataModel) o;
+        return dataId == dataModel.dataId &&
+                majorVersion == dataModel.majorVersion &&
+                minorVersion == dataModel.minorVersion &&
+                Objects.equals(schemaName, dataModel.schemaName) &&
+                Objects.equals(createdTS, dataModel.createdTS) &&
+                Objects.equals(createdBy, dataModel.createdBy) &&
+                Objects.equals(json, dataModel.json);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataId, schemaName, majorVersion, minorVersion, createdTS, createdBy, json);
     }
 }

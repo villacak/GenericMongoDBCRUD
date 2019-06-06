@@ -6,7 +6,7 @@ import org.eclipse.persistence.nosql.annotations.NoSql;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity(name = "JSON_SCHEMA")
 @NoSql(dataFormat = DataFormatType.MAPPED)
@@ -19,7 +19,7 @@ public class SchemaEntity implements Serializable {
     @Id
     @GeneratedValue
     @Field(name = "_id")
-    private int id;
+    private String id;
 
     @Column(name = "schemaName")
     private String schemaName;
@@ -34,13 +34,13 @@ public class SchemaEntity implements Serializable {
     private String createdBy;
 
     @Column(name = "createdTS")
-    private LocalDateTime createdTS;
+    private Date createdTS;
 
     @Column(name = "startedTS")
-    private LocalDateTime startedTS;
+    private Date startedTS;
 
     @Column(name = "endTS")
-    private LocalDateTime endTS;
+    private Date endTS;
 
     @Column(name = "isValid")
     private boolean isValid;
@@ -52,11 +52,11 @@ public class SchemaEntity implements Serializable {
     private long version;
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -92,27 +92,27 @@ public class SchemaEntity implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedTS() {
+    public Date getCreatedTS() {
         return createdTS;
     }
 
-    public void setCreatedTS(LocalDateTime createdTS) {
+    public void setCreatedTS(Date createdTS) {
         this.createdTS = createdTS;
     }
 
-    public LocalDateTime getStartedTS() {
+    public Date getStartedTS() {
         return startedTS;
     }
 
-    public void setStartedTS(LocalDateTime startedTS) {
+    public void setStartedTS(Date startedTS) {
         this.startedTS = startedTS;
     }
 
-    public LocalDateTime getEndTS() {
+    public Date getEndTS() {
         return endTS;
     }
 
-    public void setEndTS(LocalDateTime endTS) {
+    public void setEndTS(Date endTS) {
         this.endTS = endTS;
     }
 

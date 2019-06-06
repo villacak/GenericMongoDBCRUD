@@ -5,7 +5,7 @@ import org.eclipse.persistence.nosql.annotations.Field;
 import org.eclipse.persistence.nosql.annotations.NoSql;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity(name = "JSON_DATA")
 @NoSql(dataFormat = DataFormatType.MAPPED)
@@ -21,7 +21,7 @@ public class DataEntity {
     @Id
     @GeneratedValue
     @Field(name = "id")
-    private int dataId;
+    private String dataId;
 
     @Column(name = "schemaName")
     private String schemaName;
@@ -33,7 +33,7 @@ public class DataEntity {
     private int minorVersion;
 
     @Column(name = "createdTS")
-    private LocalDateTime createdTS;
+    private Date createdTS;
 
     @Column(name = "createdBy")
     private String createdBy;
@@ -46,11 +46,11 @@ public class DataEntity {
 
 
 
-    public int getDataId() {
+    public String getDataId() {
         return dataId;
     }
 
-    public void setDataId(int dataId) {
+    public void setDataId(String dataId) {
         this.dataId = dataId;
     }
 
@@ -78,11 +78,11 @@ public class DataEntity {
         this.minorVersion = minorVersion;
     }
 
-    public LocalDateTime getCreatedTS() {
+    public Date getCreatedTS() {
         return createdTS;
     }
 
-    public void setCreatedTS(LocalDateTime createdTS) {
+    public void setCreatedTS(Date createdTS) {
         this.createdTS = createdTS;
     }
 
@@ -100,5 +100,13 @@ public class DataEntity {
 
     public void setJson(String json) {
         this.json = json;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

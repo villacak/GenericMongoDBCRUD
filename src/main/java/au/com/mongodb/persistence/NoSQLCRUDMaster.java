@@ -1,9 +1,7 @@
 package au.com.mongodb.persistence;
 
 import au.com.mongodb.constants.Constant;
-import au.com.mongodb.model.JSONSchemaModel;
 import au.com.mongodb.persistence.entities.DataEntity;
-import au.com.mongodb.persistence.entities.SchemaEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,6 +35,7 @@ public class NoSQLCRUDMaster {
      * @param namedQuery
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> searchById(final String searchField, final String searchValue, final String namedQuery) {
         final List<T> toReturn;
         if (namedQuery == null) {
@@ -62,6 +61,7 @@ public class NoSQLCRUDMaster {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> searchByNameAndVersion(final String schemaName, final int majorVersion, final int minorVersion, final String namedQuery) {
         final List<T> toReturn;
         if (namedQuery == null) {
@@ -89,6 +89,7 @@ public class NoSQLCRUDMaster {
      * @param namedQuery
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<DataEntity> searchDataByUserIdSchemaAndMajorVersionRange(final String userId, final String schemaName,
                                                                     final int majorVersionFrom, final int majorVersionTo,
                                                                     final String namedQuery) {
@@ -117,6 +118,7 @@ public class NoSQLCRUDMaster {
      * @param namedQuery
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<DataEntity> searchDataByUserIdSchema(final String userId, final String schemaName,
                                                      final String namedQuery) {
         final List<DataEntity> toReturn;

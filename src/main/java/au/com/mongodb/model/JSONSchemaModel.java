@@ -3,28 +3,28 @@ package au.com.mongodb.model;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 public class JSONSchemaModel {
 
-    private int id;
+    private String id;
     private String schemaName;
     private int majorVersion;
     private int minorVersion;
     private String createdBy;
-    private LocalDateTime createdTS;
-    private LocalDateTime startedTS;
-    private LocalDateTime endTS;
+    private Date createdTS;
+    private Date startedTS;
+    private Date endTS;
     private boolean isValid;
     private String json;
+    private int version;
 
 
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -60,27 +60,27 @@ public class JSONSchemaModel {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedTS() {
+    public Date getCreatedTS() {
         return createdTS;
     }
 
-    public void setCreatedTS(LocalDateTime createdTS) {
+    public void setCreatedTS(Date createdTS) {
         this.createdTS = createdTS;
     }
 
-    public LocalDateTime getStartedTS() {
+    public Date getStartedTS() {
         return startedTS;
     }
 
-    public void setStartedTS(LocalDateTime startedTS) {
+    public void setStartedTS(Date startedTS) {
         this.startedTS = startedTS;
     }
 
-    public LocalDateTime getEndTS() {
+    public Date getEndTS() {
         return endTS;
     }
 
-    public void setEndTS(LocalDateTime endTS) {
+    public void setEndTS(Date endTS) {
         this.endTS = endTS;
     }
 
@@ -100,6 +100,13 @@ public class JSONSchemaModel {
         this.json = json;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
 
     public String toJSON() {
         final ObjectMapper mapper = new ObjectMapper();
