@@ -111,7 +111,7 @@ public class SchemaBusiness {
         Response response = null;
         try {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<SchemaEntity> schemaEntities = crud.searchById(field, id, "schema.findById");
+            final List<SchemaEntity> schemaEntities = crud.searchById(id, field, "schema.findById");
             if (schemaEntities == null || schemaEntities.size() == 0) {
                 response = ReadyResponses.successWithMessage("Nothing found.");
             } else {

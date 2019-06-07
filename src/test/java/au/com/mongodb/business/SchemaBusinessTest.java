@@ -186,6 +186,16 @@ public class SchemaBusinessTest {
         assertTrue(schemaModel.getMinorVersion() == tempSchemaModel.getMinorVersion());
 
 
+
+        final JSONSchemaModel testSearch = business.searchSchemaByNameAndVersion(schemaModel.getSchemaName(),
+                schemaModel.getMajorVersion(), schemaModel.getMinorVersion());
+        assertNotNull(testSearch);
+        assertEquals(schemaModel.getId(), testSearch.getId());
+        assertEquals(schemaModel.getJson(), testSearch.getJson());
+        assertTrue(schemaModel.getMajorVersion() == testSearch.getMajorVersion());
+        assertTrue(schemaModel.getMinorVersion() == testSearch.getMinorVersion());
+
+
         resp = resp = business.searchSchemasByNameAndVersion("nonExistingUserId",
                 0, 0);
         assertNotNull(resp);

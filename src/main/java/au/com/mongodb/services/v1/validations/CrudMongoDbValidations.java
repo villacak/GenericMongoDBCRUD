@@ -4,11 +4,13 @@ import au.com.mongodb.business.ReadyResponses;
 import au.com.mongodb.business.SchemaBusiness;
 import au.com.mongodb.model.JSONDataModel;
 import au.com.mongodb.model.JSONSchemaModel;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
 import javax.ws.rs.core.Response;
 
 public class CrudMongoDbValidations {
@@ -28,13 +30,10 @@ public class CrudMongoDbValidations {
                 // Validate the JSON Schema
                 final ObjectMapper mapper = new ObjectMapper();
                 final JSONSchemaModel model = mapper.readValue(json, JSONSchemaModel.class);
+                mapper.enable(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY);
+                mapper.readTree(json);
+                mapper.readTree(model.getJson());
 
-                final JsonNode jsonNode = mapper.readTree(model.getJson());
-                final JsonSchemaFactory factory = JsonSchemaFactory.byDefault();
-                final JsonSchema schema = factory.getJsonSchema(jsonNode);
-                if (!schema.validInstance(jsonNode)) {
-                    throw new Exception("Fail validate JSON-SCHEMA");
-                }
                 resp = null;
             } else {
                 resp = ReadyResponses.badRequest();

@@ -1,97 +1,117 @@
-//package au.com.mongodb.services.v1.validations;
-//
-//import au.com.mongodb.HelperTest;
-//import au.com.mongodb.enums.EventSearchField;
-//import au.com.mongodb.mapper.SchemaMapper;
-//import au.com.mongodb.model.EventModel;
-//import au.com.mongodb.persistence.entities.Event;
-//import au.com.mongodb.services.v1.health.HealthHelper;
-//import org.junit.After;
-//import org.junit.Before;
-//import org.junit.Test;
-//
-//import static org.junit.Assert.*;
-//
-//public class CrudMongoDbValidationsTest {
-//
-//    private Event event;
-//    private EventModel model;
-//    private CrudMongoDbValidations validations;
-//
-//
-//    @Before
-//    public void startup() throws Exception {
-//        final HealthHelper healthHelper = new HealthHelper();
-//        boolean isRunning = healthHelper.checkifMongoIsRunning();
-//
-//        if (isRunning) {
-//            final HelperTest helperTest = new HelperTest();
-//            event = helperTest.getEventEntityForTest();
-//            model = SchemaMapper.MAPPER.mapSchemaEntityToSchemaModel(event);
-//            validations = new CrudMongoDbValidations();
-//        } else {
-//            throw new Exception("Local MongoDB not Running");
-//        }
-//
-//    }
-//
-//    @After
-//    public void cleanup() {
-//        event = null;
-//        model = null;
-//        validations = null;
-//    }
-//
-//
-//    @Test
-//    public void validateEventModelInsertSuccessTest() {
-//        boolean isValid = validations.validateEventModelInsert(model);
-//        assertTrue(isValid);
-//    }
-//
-//    @Test
-//    public void validateEventModelInsertFailTest() {
-//        model.setAccountID(null);
-//        boolean isValid = validations.validateEventModelInsert(model);
-//        assertFalse(isValid);
-//
-//        model.setAccountID("");
-//        isValid = validations.validateEventModelInsert(model);
-//        assertFalse(isValid);
-//    }
-//
-//
-//    @Test
-//    public void validateMandatoryStringSuccessTest() {
-//        boolean isValid = validations.validateMandatoryString("Test");
-//        assertTrue(isValid);
-//    }
-//
-//    @Test
-//    public void validateMandatoryStringFailTest() {
-//        boolean isValid = validations.validateMandatoryString("");
-//        assertFalse(isValid);
-//
-//        isValid = validations.validateMandatoryString(null);
-//        assertFalse(isValid);
-//    }
-//
-//
-//    @Test
-//    public void getSearchFieldEnumSuccessTest() {
-//        EventSearchField field = validations.getSearchFieldEnum(EventSearchField.ACCOUNT_ID.getField());
-//        assertEquals(field, EventSearchField.ACCOUNT_ID);
-//    }
-//
-//    @Test
-//    public void getSearchFieldEnumFailTest() {
-//        EventSearchField field = validations.getSearchFieldEnum("test");
-//        assertNull(field);
-//
-//        field = validations.getSearchFieldEnum("");
-//        assertNull(field);
-//
-//        field = validations.getSearchFieldEnum(null);
-//        assertNull(field);
-//    }
-//}
+package au.com.mongodb.services.v1.validations;
+
+
+import au.com.mongodb.HelperTest;
+import au.com.mongodb.business.SchemaBusiness;
+import au.com.mongodb.model.JSONDataModel;
+import au.com.mongodb.model.JSONSchemaModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+
+import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.*;
+
+public class CrudMongoDbValidationsTest {
+
+    private HelperTest helperTest;
+    private CrudMongoDbValidations validations;
+    private String schemaJson;
+    private String dataJson;
+    private Response resp;
+    private boolean isSavedOrUpdated;
+    private JSONSchemaModel tempSchemaModel;
+    private SchemaBusiness business;
+
+    @Before
+    public void setup() throws JsonProcessingException {
+        helperTest = new HelperTest();
+        validations = new CrudMongoDbValidations();
+        business = new SchemaBusiness();
+
+        tempSchemaModel = helperTest.getSchemaModelTest();
+        final JSONDataModel tempDataModel = helperTest.getDataModelTest();
+
+        schemaJson = tempSchemaModel.toJSON();
+        dataJson = tempDataModel.toJSON();
+    }
+
+
+    @After
+    public void cleanup() {
+        if (isSavedOrUpdated) {
+            business.deleteSingleSchema(tempSchemaModel.getId());
+            isSavedOrUpdated = false;
+        }
+        validations = null;
+        business = null;
+        schemaJson = null;
+        dataJson = null;
+        resp = null;
+        tempSchemaModel = null;
+    }
+
+
+
+
+    @Test
+    public void validateSchemaTest() {
+        resp = validations.validateSchema(schemaJson);
+        assertNull(resp);
+
+
+        resp = validations.validateSchema("{\"test\": \"blah\"}");
+        assertNotNull(resp);
+        assertTrue(resp.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+
+
+        resp = validations.validateSchema(null);
+        assertNotNull(resp);
+        assertTrue(resp.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+
+    @Test
+    public void validateDataTest() {
+        resp = business.persistSingleSchema(tempSchemaModel, true);
+        assertTrue(resp.getStatus() == 200);
+        isSavedOrUpdated = true;
+        final String respJSON = resp.getEntity().toString();
+        final JSONSchemaModel schemaModel = business.convertRequestToModel(respJSON);
+        assertNotNull(schemaModel);
+        assertTrue(schemaModel.getId() != null);
+        tempSchemaModel.setId(schemaModel.getId());
+
+
+        resp = validations.validateData(true, dataJson);
+        assertNull(resp);
+
+        resp = validations.validateData(true,"{\"test\": \"blah\"}");
+        assertNotNull(resp);
+        assertTrue(resp.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+
+        resp = validations.validateData(false,"{\"test\": \"blah\"}");
+        assertNotNull(resp);
+        assertTrue(resp.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+
+        resp = validations.validateSchema(null);
+        assertNotNull(resp);
+        assertTrue(resp.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+
+    @Test
+    public void validateMandatoryStringTest() {
+        boolean isValid = validations.validateMandatoryString("Test");
+        assertTrue(isValid);
+
+        isValid = validations.validateMandatoryString(null);
+        assertFalse(isValid);
+
+        isValid = validations.validateMandatoryString("");
+        assertFalse(isValid);
+    }
+}
