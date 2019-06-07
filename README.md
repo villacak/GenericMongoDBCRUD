@@ -85,3 +85,5 @@ Retrieve the schema named as schemaName that contain the same major and minor ve
          private int version;
 
 Please feel free to fork and create your own custom version.
+As it's a Maven project, you can build it typing <b><i>mvn clean install</i></b>
+then get the .war file and deploy in Tomcat or any other Application Server.
