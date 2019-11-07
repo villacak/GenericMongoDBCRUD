@@ -1,5 +1,8 @@
 package au.com.mongodb.business;
 
+import au.com.mongodb.cache.BasicProperties;
+import au.com.mongodb.cache.MongoDBCRUDCacheUtils;
+import au.com.mongodb.constants.Constant;
 import au.com.mongodb.model.ResponseMessage;
 import javax.ws.rs.core.Response;
 
@@ -11,8 +14,9 @@ public class ReadyResponses {
      * @return
      */
     public static Response badRequest() {
+        final MongoDBCRUDCacheUtils cacheUtils = new MongoDBCRUDCacheUtils(Constant.CACHE_NAME_DEFAULT);
         final ResponseMessage responseMessage = new ResponseMessage(Response.Status.BAD_REQUEST.getStatusCode(),
-                "Basic Validation Failed. Please check your payload.");
+                cacheUtils.getCachedValueFromKey(BasicProperties.BASIC_VALIDATION_FAILED.toString()));
         final Response response = Response.status(Response.Status.BAD_REQUEST).entity(responseMessage.toJSON()).build();
         return response;
     }

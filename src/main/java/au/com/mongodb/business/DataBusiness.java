@@ -1,5 +1,7 @@
 package au.com.mongodb.business;
 
+import au.com.mongodb.cache.BasicProperties;
+import au.com.mongodb.cache.MongoDBCRUDCacheUtils;
 import au.com.mongodb.constants.Constant;
 import au.com.mongodb.mapper.DataMapper;
 import au.com.mongodb.model.JSONDataModel;
@@ -16,6 +18,11 @@ import java.util.List;
 
 public class DataBusiness {
 
+    private MongoDBCRUDCacheUtils cacheUtils;
+
+    public DataBusiness() {
+        cacheUtils = new MongoDBCRUDCacheUtils(Constant.CACHE_NAME_DEFAULT);
+    }
 
     /**
      * convertRequestToModel
@@ -35,7 +42,7 @@ public class DataBusiness {
 
             if (!validations.validateMandatoryString(dataModel.getCreatedBy())) {
                 // Capture the user id and add to the setCreatedBy
-                dataModel.setCreatedBy("UserLoggedId");
+                dataModel.setCreatedBy(cacheUtils.getCachedValueFromKey(BasicProperties.USER_LOGGED_ID.toString()));
             }
         } catch (IOException e) {
             dataModel = null;
@@ -80,18 +87,22 @@ public class DataBusiness {
      * @return
      */
     public Response deleteSingleData(final String id) {
+        final int FIRST = 0;
         Response response = null;
+
         try {
             final ResponseMessage responseMessage;
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<DataEntity> dataEntities = crud.searchById(Constant.ENTITY_ID, id, "data.findById");
+            final List<DataEntity> dataEntities = crud.searchById(Constant.ENTITY_ID,
+                    id,
+                    cacheUtils.getCachedValueFromKey(BasicProperties.DATA_FIND_BY_ID.toString()));
             if (dataEntities == null || dataEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Record not found for delete.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.RECORD_NOT_FOUND_FOR_DELETE.toString()));
             } else if (dataEntities.size() > 1) {
-                response = ReadyResponses.successWithMessage("Duplicated ids.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.DUPLICATED_IDS.toString()));
             } else {
-                crud.delete(dataEntities.get(0));
-                response = ReadyResponses.successWithMessage("Record deleted.");
+                crud.delete(dataEntities.get(FIRST));
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.RECORD_DELETED.toString()));
             }
         } catch (Exception e) {
             response = ReadyResponses.serverError();
@@ -111,9 +122,11 @@ public class DataBusiness {
         Response response = null;
         try {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<DataEntity> dataEntities = crud.searchById(id, field, "data.findById");
+            final List<DataEntity> dataEntities = crud.searchById(id,
+                    field,
+                    cacheUtils.getCachedValueFromKey(BasicProperties.DATA_FIND_BY_ID.toString()));
             if (dataEntities == null || dataEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Nothing found.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.NOTHING_FOUND.toString()));
             } else {
                 final ObjectMapper mapper = new ObjectMapper();
                 final List<JSONDataModel> models = new ArrayList<>(dataEntities.size());
@@ -148,16 +161,14 @@ public class DataBusiness {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
             final List<DataEntity> dataEntities;
             if (majorVersionFrom == 0 && majorVersionTo == 0) {
-                dataEntities = crud.searchDataByUserIdSchema(userId, schemaName,
-                        "data.searchDataByUserIdSchema");
+                dataEntities = crud.searchDataByUserIdSchema(userId, schemaName,"data.searchDataByUserIdSchema");
             } else {
                 dataEntities = crud.searchDataByUserIdSchemaAndMajorVersionRange(userId, schemaName,
-                        majorVersionFrom, majorVersionTo,
-                        "data.searchDataByUserIdSchemaAndMajorVersionRange");
+                        majorVersionFrom, majorVersionTo, "data.searchDataByUserIdSchemaAndMajorVersionRange");
             }
 
             if (dataEntities == null || dataEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Nothing found.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.NOTHING_FOUND.toString()));
             } else {
                 final ObjectMapper mapper = new ObjectMapper();
                 final List<JSONDataModel> models = new ArrayList<>(dataEntities.size());

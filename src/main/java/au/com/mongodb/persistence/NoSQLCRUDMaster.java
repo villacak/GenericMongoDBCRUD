@@ -11,8 +11,6 @@ import java.util.List;
 
 public class NoSQLCRUDMaster {
 
-    private final String PU = "NoSQLPersistenceUnit";
-
     private EntityManagerFactory emf;
     private EntityManager em;
 
@@ -21,7 +19,7 @@ public class NoSQLCRUDMaster {
      * Create the Entity Manager from the Persistence Unit
      */
     public NoSQLCRUDMaster() {
-        emf = Persistence.createEntityManagerFactory(PU);
+        emf = Persistence.createEntityManagerFactory(Constant.PERSISTENCE_UNIT);
         em = emf.createEntityManager();
     }
 

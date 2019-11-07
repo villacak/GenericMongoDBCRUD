@@ -1,5 +1,7 @@
 package au.com.mongodb.business;
 
+import au.com.mongodb.cache.BasicProperties;
+import au.com.mongodb.cache.MongoDBCRUDCacheUtils;
 import au.com.mongodb.constants.Constant;
 import au.com.mongodb.mapper.SchemaMapper;
 import au.com.mongodb.model.JSONSchemaModel;
@@ -15,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SchemaBusiness {
+
+    private final int FIRST = 0;
+    private MongoDBCRUDCacheUtils cacheUtils;
+
+    public SchemaBusiness() {
+        cacheUtils = new MongoDBCRUDCacheUtils(Constant.CACHE_NAME_DEFAULT);
+    }
 
 
     /**
@@ -35,7 +44,7 @@ public class SchemaBusiness {
 
             if (!validations.validateMandatoryString(schemaModel.getCreatedBy())) {
                 // Capture the user id and add to the setCreatedBy
-                schemaModel.setCreatedBy("UserLoggedId");
+                schemaModel.setCreatedBy(cacheUtils.getCachedValueFromKey(BasicProperties.USER_LOGGED_ID.toString()));
             }
         } catch (IOException e) {
             schemaModel = null;
@@ -84,14 +93,16 @@ public class SchemaBusiness {
         try {
             final ResponseMessage responseMessage;
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<SchemaEntity> schemaEntities = crud.searchById(Constant.ENTITY_ID, id, "schema.findById");
+            final List<SchemaEntity> schemaEntities = crud.searchById(Constant.ENTITY_ID,
+                    id,
+                    cacheUtils.getCachedValueFromKey(BasicProperties.SCHEMA_FIND_BY_ID.toString()));
             if (schemaEntities == null || schemaEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Record not found for delete.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.RECORD_NOT_FOUND_FOR_DELETE.toString()));
             } else if (schemaEntities.size() > 1) {
-                response = ReadyResponses.successWithMessage("Duplicated ids.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.DUPLICATED_IDS.toString()));
             } else {
-                crud.delete(schemaEntities.get(0));
-                response = ReadyResponses.successWithMessage("Record deleted.");
+                crud.delete(schemaEntities.get(FIRST));
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.RECORD_DELETED.toString()));
             }
         } catch (Exception e) {
             response = ReadyResponses.serverError();
@@ -111,9 +122,11 @@ public class SchemaBusiness {
         Response response = null;
         try {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<SchemaEntity> schemaEntities = crud.searchById(id, field, "schema.findById");
+            final List<SchemaEntity> schemaEntities = crud.searchById(id,
+                    field,
+                    cacheUtils.getCachedValueFromKey(BasicProperties.SCHEMA_FIND_BY_ID.toString()));
             if (schemaEntities == null || schemaEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Nothing found.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.NOTHING_FOUND.toString()));
             } else {
                 final ObjectMapper mapper = new ObjectMapper();
                 final List<JSONSchemaModel> models = new ArrayList<>(schemaEntities.size());
@@ -144,9 +157,12 @@ public class SchemaBusiness {
         Response response = null;
         try {
             final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-            final List<SchemaEntity> schemaEntities = crud.searchByNameAndVersion(name, majorVersion, minorVersion, "schema.findByNameAndVersion");
+            final List<SchemaEntity> schemaEntities = crud.searchByNameAndVersion(name,
+                    majorVersion,
+                    minorVersion,
+                    "schema.findByNameAndVersion");
             if (schemaEntities == null || schemaEntities.size() == 0) {
-                response = ReadyResponses.successWithMessage("Nothing found.");
+                response = ReadyResponses.successWithMessage(cacheUtils.getCachedValueFromKey(BasicProperties.NOTHING_FOUND.toString()));
             } else {
                 final ObjectMapper mapper = new ObjectMapper();
                 final List<JSONSchemaModel> models = new ArrayList<>(schemaEntities.size());
@@ -175,10 +191,13 @@ public class SchemaBusiness {
      */
     public JSONSchemaModel searchSchemaByNameAndVersion(final String name, final int majorVersion, final int minorVersion) {
         final NoSQLCRUDMaster crud = new NoSQLCRUDMaster();
-        final List<SchemaEntity> schemaEntities = crud.searchByNameAndVersion(name, majorVersion, minorVersion,"schema.findByNameAndVersion");
+        final List<SchemaEntity> schemaEntities = crud.searchByNameAndVersion(name,
+                majorVersion,
+                minorVersion,
+                "schema.findByNameAndVersion");
         final JSONSchemaModel modelToReturn;
         if (schemaEntities != null || schemaEntities.size() == 1) {
-            final SchemaEntity tempSchema = schemaEntities.get(0);
+            final SchemaEntity tempSchema = schemaEntities.get(FIRST);
             modelToReturn = SchemaMapper.MAPPER.mapSchemaEntityToSchemaModel(tempSchema);
         } else {
             modelToReturn = null;
