@@ -34,7 +34,7 @@
         <hk2.version>2.5.0-b42</hk2.version>
         <asm-debug-all.version>5.0.4</asm-debug-all.version>
         <javax.json.version>1.0.4</javax.json.version>
-        <jackson.version>2.10.0</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
         <jpa.version>2.7.4</jpa.version>
         <eclipse.jetty.version>9.4.17.v20190418</eclipse.jetty.version>
         <mongodb.driver.version>3.11.1</mongodb.driver.version>
